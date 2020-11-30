@@ -12,7 +12,7 @@ import torch.backends.cudnn as cudnn
 import torch.optim
 import model as models
 
-from utils.datasets import Get_Dataset
+from iccv19_attribute.utils.datasets import Get_Dataset
 
 parser = argparse.ArgumentParser(description='Pedestrian Attribute Framework')
 parser.add_argument('--experiment', default='rap', type=str, required=True, help='(default=%(default)s)')
@@ -34,8 +34,10 @@ parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true', re
 # Seed
 np.random.seed(1)
 torch.manual_seed(1)
-if torch.cuda.is_available(): torch.cuda.manual_seed(1)
-else: print('[CUDA unavailable]'); sys.exit()
+if torch.cuda.is_available():
+    torch.cuda.manual_seed(1)
+else:
+    print('[CUDA unavailable]')
 best_accu = 0
 EPS = 1e-12
 
@@ -73,7 +75,8 @@ def main():
 
     # for training on multiple GPUs.
     # Use CUDA_VISIBLE_DEVICES=0,1 to specify which GPUs to use
-    model = torch.nn.DataParallel(model).cuda()
+    if torch.cuda.is_available():
+        model = torch.nn.DataParallel(model).cuda()
 
     # optionally resume from a checkpoint
     if args.resume:
@@ -140,8 +143,9 @@ def train(train_loader, model, criterion, optimizer, epoch):
     end = time.time()
     for i, _ in enumerate(train_loader):
         input, target = _
-        target = target.cuda(non_blocking=True)
-        input = input.cuda(non_blocking=True)
+        if torch.cuda.is_available():
+            target = target.cuda(non_blocking=True)
+            input = input.cuda(non_blocking=True)
         output = model(input)
 
         bs = target.size(0)
@@ -191,8 +195,9 @@ def validate(val_loader, model, criterion, epoch):
     end = time.time()
     for i, _ in enumerate(val_loader):
         input, target = _
-        target = target.cuda(non_blocking=True)
-        input = input.cuda(non_blocking=True)
+        if torch.cuda.is_available():
+            target = target.cuda(non_blocking=True)
+            input = input.cuda(non_blocking=True)
         output = model(input)
 
         bs = target.size(0)
@@ -251,8 +256,9 @@ def test(val_loader, model, attr_num, description):
 
     for i, _ in enumerate(val_loader):
         input, target = _
-        target = target.cuda(non_blocking=True)
-        input = input.cuda(non_blocking=True)
+        if torch.cuda.is_available():
+            target = target.cuda(non_blocking=True)
+            input = input.cuda(non_blocking=True)
         output = model(input)
         bs = target.size(0)
 
@@ -412,7 +418,7 @@ class Weighted_BCELoss(object):
                                         0.711711111111,
                                         0.173444444444,
                                         0.114844444444,
-                                        0.006]).cuda()
+                                        0.006])
         elif experiment == 'rap':
             self.weights = torch.Tensor([0.311434,
                                         0.009980,
@@ -464,7 +470,7 @@ class Weighted_BCELoss(object):
                                         0.010388,
                                         0.017603,
                                         0.023446,
-                                        0.128917]).cuda()
+                                        0.128917])
         elif experiment == 'peta':
             self.weights = torch.Tensor([0.5016,
                                         0.3275,
@@ -500,7 +506,9 @@ class Weighted_BCELoss(object):
                                         0.5125,
                                         0.0838,
                                         0.4605,
-                                        0.0124]).cuda()
+                                        0.0124])
+        if torch.cuda.is_available():
+            self.weights = self.weights.cuda()
         #self.weights = None
 
     def forward(self, output, target, epoch):

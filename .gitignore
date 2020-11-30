@@ -1,2 +1,9 @@
 built/*
 dist/iccv19_attribute-1.0.0-py3-none-any.whl dist/iccv19_attribute-1.0.0.tar.gz
+iccv19_attribute/model/__pycache__/
+iccv19_attribute/model/__pycache__/inception_iccv.cpython-37.pyc iccv19_attribute/model/__pycache__/__init__.cpython-37.pyc
+iccv19_attribute/utils/__pycacha__/*
+iccv19_attribute/utils/__pycache__/datasets.cpython-37.pyc iccv19_attribute/utils/__pycache__/__init__.cpython-37.pyc
+iccv19_attribute/utils/__pycache__/
+build/
+dist/
