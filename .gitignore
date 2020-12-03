@@ -7,3 +7,6 @@ iccv19_attribute/utils/__pycache__/datasets.cpython-37.pyc iccv19_attribute/util
 iccv19_attribute/utils/__pycache__/
 build/
 dist/
+iccv19_attribute.egg-info/
+iccv19_attribute/__pycache__/
+iccv19_attribute/model/bn_inception-52deb4733.pth iccv19_attribute/model/inception_iccv.py iccv19_attribute/model/__init__.py iccv19_attribute/model/__pycache__
